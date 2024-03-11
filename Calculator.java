@@ -11,16 +11,17 @@ public class Calculator {
 
         try {
             String[] vvod = input.split(" ");
+            if (vvod.length != 3) throw new IllegalArgumentException("Некорректный формат ввода");
             String operand1 = vvod[0];
             String operator = vvod[1];
             String operand2 = vvod[2];
 
             boolean isArabic = isArabicNumber(operand1) && isArabicNumber(operand2);
             boolean isRoman = isRomanNumber(operand1) && isRomanNumber(operand2);
-
             if (!isArabic && !isRoman) {
-                throw new RuntimeException("Неподходящие числа. Калькулятор может работать только с арабскими или римскими цифрами одновременно.");
+                throw new RuntimeException("Калькулятор может работать только с арабскими или римскими цифрами одновременно.");
             }
+
 
             int result;
             if (isArabic) {
@@ -32,6 +33,7 @@ public class Calculator {
                 int num1 = romanToArabic(operand1);
                 int num2 = romanToArabic(operand2);
                 result = calculate(num1, num2, operator);
+                if (result <= 0) throw new IllegalArgumentException("Результат работы калькулятора с римскими числами должен быть положительным");
                 System.out.println(arabicToRoman(result));
             }
 
@@ -64,7 +66,7 @@ public class Calculator {
     private static boolean isArabicNumber(String input) {
         try {
             int num = Integer.parseInt(input);
-            return num >= 1 && num <= 10;
+            return num >= -10 && num <= 10;
         } catch (NumberFormatException e) {
             return false;
         }
@@ -73,7 +75,7 @@ public class Calculator {
     private static boolean isRomanNumber(String input) {
         String[] validRomanNumerals = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
         for (String numeral : validRomanNumerals) {
-            if (numeral.equals(input)) {
+            if (numeral.equalsIgnoreCase(input)) {
                 return true;
             }
         }
